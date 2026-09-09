@@ -1,6 +1,55 @@
-# This is the CODEOWNERS file.
-# It defines who is responsible for different parts of the codebase.
+# CODEOWNERS
+#
+# This file defines required reviewers for specific paths.
+# GitHub enforces these reviews automatically on every PR.
+# A listed owner must approve before the PR can merge, regardless
+# of who else has approved.
 
+# -----------------------------------------------------------------------
+# Global fallback: all paths not matched below require a review from the
+# core maintainers team. This prevents any file from having zero required
+# reviewers, including new directories added in the future.
+# -----------------------------------------------------------------------
 * @kalviumcommunity/devops-instructors
+
+# -----------------------------------------------------------------------
+# src/payments.js — Financial transaction logic.
+# Any change here carries direct monetary and compliance risk.
+# The fintech-team owns correctness of all billing, tax, and payment
+# calculations. A broken payment flow cannot be caught purely by tests;
+# a domain expert must review for business-logic correctness.
+# -----------------------------------------------------------------------
 /src/payments.js @kalviumcommunity/fintech-team
+
+# -----------------------------------------------------------------------
+# src/auth.js — Authentication and authorization.
+# This file controls who can access the application and what they can do.
+# Security vulnerabilities here (broken sessions, missing checks, JWT
+# misuse) are critical. The security-team must review all changes.
+# -----------------------------------------------------------------------
 /src/auth.js @kalviumcommunity/security-team
+
+# -----------------------------------------------------------------------
+# src/app.js — Application entry point and integration wiring.
+# This file connects auth, payments, and all other subsystems.
+# A change here can break cross-cutting concerns even when individual
+# modules are untouched. Requires sign-off from both engineering leads.
+# -----------------------------------------------------------------------
+/src/app.js @kalviumcommunity/engineering-leads
+
+# -----------------------------------------------------------------------
+# .github/workflows/ — CI/CD pipeline definitions.
+# Changes to workflow files control what runs in automated pipelines,
+# including security scans, deployments, and branch protection checks.
+# A developer could silently remove a required gate. Only the DevOps
+# team may approve modifications to pipeline configuration.
+# -----------------------------------------------------------------------
+/.github/workflows/ @kalviumcommunity/devops-instructors
+
+# -----------------------------------------------------------------------
+# package.json — Dependency manifest.
+# Adding, removing, or upgrading dependencies affects the supply chain.
+# A compromised or outdated package can introduce CVEs into production.
+# The security-team must approve all dependency changes.
+# -----------------------------------------------------------------------
+/package.json @kalviumcommunity/security-team
